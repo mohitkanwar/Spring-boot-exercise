@@ -19,9 +19,9 @@ public class BookingController {
 
     @Autowired
     private BookingService service;
-    @RequestMapping("/bookedseates")
-    public  String books(@RequestParam(value="errorMessage", required=false) String errorMessage, Model model) {
-        model.addAttribute("errorMessage", errorMessage);
+    @RequestMapping("/bookedseats")
+    public  String books(@RequestParam(value="message", required=false) String message, Model model) {
+        model.addAttribute("message", message);
         model.addAttribute("bookings", service.findAllBookings());
         return "booking";
     }
@@ -31,32 +31,10 @@ public class BookingController {
                                  @RequestParam(value="name3", required=false) String name3,
                                  @RequestParam(value="name4", required=false) String name4,
                                  @RequestParam(value="name5", required=false) String name5,
-                                 @RequestParam(value="name6", required=false) String name6,
-                                 Model model) {
-
-
-
-        String errorMessage=null;
-        try {
-            /**
-             * It is always a good idea to validate inputs before processing them.
-             * However, the check is missing here intentionally to observe the Transactional
-             * behaviour from Spring.
-             */
-            service.book(name1,name2,name3,name4,name5,name6);
-        }
-        catch (RuntimeException e){
-            logger.error(e.getMessage());
-
-            if(e.getMessage().contains("Value too long for column")){
-                errorMessage = "One of the names is too long, hence booking is not made!";
-            }
-            else{
-                errorMessage = "Some unexpected exception occurred!";
-            }
-
-        }
-        return new ModelAndView("redirect:/bookedseates","errorMessage",errorMessage);
+                                 @RequestParam(value="name6", required=false) String name6) {
+        String message= " Success";
+        service.book(name1,name2,name3,name4,name5,name6);
+        return new ModelAndView("redirect:/bookedseats","message",message);
 
     }
 
